@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reservierungsliste</title>
+</head>
+<body>
+<h1>Reservierungsliste</h1>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Id</th>
+        <th>Datum</th>
+        <th>von</th>
+        <th>bis</th>
+        <th>Koerperregion</th>
+        <th>Kommentar</th>
+    </tr>
+    <tr th:each="r : ${reservations}">
+        <td th:text="${r.id}"></td>
+        <td th:text="${r.date}"></td>
+        <td th:text="${r.timeFrom}"></td>
+        <td th:text="${r.timeTo}"></td>
+        <td th:text="${r.bodyRegion}"></td>
+        <td th:text="${r.comment} ?: '-'" ></td>
+    </tr>
+</table>
+</body>
+</html>

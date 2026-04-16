@@ -12,23 +12,42 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private String socialSecurityNumber;
+    private String firstName;
+    private String lastName;
+    private String gender;
+    private LocalDate birthDate;
 
-    private String name;
-    private LocalDate birth;
-
-    public String getName() {
-        return name;
+    public String getSocialSecurityNumber() {
+        return socialSecurityNumber;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSocialSecurityNumber(String socialSecurityNumber) {
+        this.socialSecurityNumber = socialSecurityNumber;
     }
 
-    public LocalDate getBirth() {
-        return birth;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setBirth(LocalDate birth) {
-        this.birth = birth;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender)
+    {
+        this.gender = gender;
     }
 }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Neuen Patienten registrieren</title>
+</head>
+<body>
+<h1>Neuen Patienten registrieren</h1>
+
+<form th:action="@{/newPatient}" th:object="${patient}" method="post">
+    <label>Sozialversicherungsnummer</label><br>
+    <input type="text" th:field="*{socialSecurityNumber}" required /><br>
+
+    <label>Vorname</label><br>
+    <input type="text" th:field="*{firstName}" required /><br>
+
+    <label>Nachname</label><br>
+    <input type="text" th:field="*{lastName}" required /><br>
+
+    <label>Geschlecht</label><br>
+    <select th:field="*{gender}" required>
+        <option value="Männlich">Maennlich</option>
+        <option value="Weiblich">Weiblich</option>
+        <option value="Divers">Divers</option>
+    </select><br>
+
+    <label>Geburtsdatum</label><br>
+    <input type="date" th:field="*{birthDate}" required /><br>
+
+    <button type="submit">Patient speichern</button>
+</form>
+</body>
+</html>

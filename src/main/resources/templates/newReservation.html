@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reservierung erfassen</title>
+</head>
+<body>
+<h1>Reservierung erfassen</h1>
+
+<form th:action="@{/newReservation}" th:object="${reservation}" method="post">
+    <label>Datum</label><br>
+    <input type="date" th:field="*{date}" required /><br>
+
+    <label>Startzeit</label><br>
+    <input type="time" th:field="*{timeFrom}" required /><br>
+
+    <label>Endzeit</label><br>
+    <input type="time" th:field="*{timeTo}" required /><br>
+
+    <label>zu untersuchende Körperregion</label><br>
+    <select th:field="*{bodyRegion}" required>
+        <option value="">Bitte wählen</option>
+        <option value="Kopf">Kopf</option>
+        <option value="Brust">Brust</option>
+        <option value="Bauch">Bauch</option>
+        <option value="Wirbelsäule">Wirbelsäule</option>
+        <option value="Extremität">Extremität</option>
+    </select><br>
+
+    <label>Kommentar</label><br>
+    <textarea th:field="*{comment}"></textarea><br>
+
+    <button type="submit">Reservierung speichern</button>
+</form>
+</body>
+</html>
