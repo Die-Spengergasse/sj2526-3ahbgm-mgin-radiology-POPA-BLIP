@@ -5,6 +5,23 @@
 </head>
 <body>
 <h1>Reservierung erfassen</h1>
+<label>Patient</label><br>
+<select name="patient.id" required>
+    <option value="">Bitte wählen</option>
+    <option th:each="p : ${patients}"
+            th:value="${p.id}"
+            th:text="${p.firstName + ' ' + p.lastName}">
+    </option>
+</select><br>
+
+<label>Gerät</label><br>
+<select name="device.id" required>
+    <option value="">Bitte wählen</option>
+    <option th:each="d : ${devices}"
+            th:value="${d.id}"
+            th:text="${d.name}">
+    </option>
+</select><br>
 
 <form th:action="@{/newReservation}" th:object="${reservation}" method="post">
     <label>Datum</label><br>
@@ -30,6 +47,8 @@
     <textarea th:field="*{comment}"></textarea><br>
 
     <button type="submit">Reservierung speichern</button>
+
+
 </form>
 </body>
 </html>

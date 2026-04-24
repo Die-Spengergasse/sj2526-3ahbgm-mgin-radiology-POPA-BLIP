@@ -3,8 +3,11 @@ package at.spengergasse.spring_thymeleaf.entities;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer>
 {
-
+    List<Reservation> findByDeviceIdAndDate(String deviceId, java.time.LocalDate date);
+    List<Reservation> findByPatientIdAndDate(Integer patientId, java.time.LocalDate date);
 }
