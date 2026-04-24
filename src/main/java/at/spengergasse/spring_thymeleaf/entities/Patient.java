@@ -1,13 +1,11 @@
 package at.spengergasse.spring_thymeleaf.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "patient")        //wie db tabelle heißt
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +15,19 @@ public class Patient {
     private String lastName;
     private String gender;
     private LocalDate birthDate;
+
+    public Patient(int id, String socialSecurityNumber, String firstName, String lastName, String gender, LocalDate birthDate) {
+        this.id = id;
+        this.socialSecurityNumber = socialSecurityNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.birthDate = birthDate;
+    }
+
+    public Patient()
+    {
+    }
 
     public String getSocialSecurityNumber() {
         return socialSecurityNumber;
@@ -49,5 +60,23 @@ public class Patient {
     public void setGender(String gender)
     {
         this.gender = gender;
+    }
+
+    public LocalDate getBirthDate()
+    {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate)
+    {
+        this.birthDate = birthDate;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

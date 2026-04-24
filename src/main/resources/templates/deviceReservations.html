@@ -8,7 +8,7 @@
 
 <table border="1" cellpadding="5">
     <tr>
-        <th>Id</th>
+        <th>Patient</th>
         <th>Datum</th>
         <th>von</th>
         <th>bis</th>
@@ -16,7 +16,7 @@
         <th>Kommentar</th>
     </tr>
     <tr th:each="r : ${reservations}">
-        <td th:text="${r.id}"></td>
+        <td th:text="${r.patient.firstName + ' ' + r.patient.lastName}"></td>
         <td th:text="${r.date}"></td>
         <td th:text="${r.timeFrom}"></td>
         <td th:text="${r.timeTo}"></td>

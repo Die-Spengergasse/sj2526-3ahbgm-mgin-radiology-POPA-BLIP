@@ -1,20 +1,26 @@
 package at.spengergasse.spring_thymeleaf.entities;
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "device")        //wie db tabelle  heißt
 public class Device
 {
     @Id
     private String id;
     private String type;
     private String location;
+
+    public Device(String type, String location)
+    {
+        this.type = type;
+        this.location = location;
+    }
+
+    public Device()
+    {
+
+    }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
