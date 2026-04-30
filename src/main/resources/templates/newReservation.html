@@ -5,25 +5,28 @@
 </head>
 <body>
 <h1>Reservierung erfassen</h1>
-<label>Patient</label><br>
-<select name="patient.id" required>
-    <option value="">Bitte wählen</option>
-    <option th:each="p : ${patients}"
-            th:value="${p.id}"
-            th:text="${p.firstName + ' ' + p.lastName}">
-    </option>
-</select><br>
-
-<label>Gerät</label><br>
-<select name="device.id" required>
-    <option value="">Bitte wählen</option>
-    <option th:each="d : ${devices}"
-            th:value="${d.id}"
-            th:text="${d.name}">
-    </option>
-</select><br>
 
 <form th:action="@{/newReservation}" th:object="${reservation}" method="post">
+
+    <label>Patient</label><br>
+    <select th:field="*{patient.id}" required>
+        <option value="">Bitte wählen</option>
+        <option th:each="p : ${patients}"
+                th:value="${p.id}"
+                th:text="${p.firstName + ' ' + p.lastName}">
+        </option>
+    </select><br>
+
+    <label>Geraet</label><br>
+    <select th:field="*{device.id}" required>
+        <option value="">Bitte waehlen</option>
+        <!-- Diese Schleife lädt deine Geräte aus der Datenbank -->
+        <option th:each="d : ${devices}"
+                th:value="${d.id}"
+                th:text="${d.type + ' (' + d.location + ')'}">
+        </option>
+    </select><br>
+
     <label>Datum</label><br>
     <input type="date" th:field="*{date}" required /><br>
 
@@ -33,22 +36,23 @@
     <label>Endzeit</label><br>
     <input type="time" th:field="*{timeTo}" required /><br>
 
-    <label>zu untersuchende Körperregion</label><br>
+    <label>zu untersuchende Körperregion</label>
+    <br>
     <select th:field="*{bodyRegion}" required>
-        <option value="">Bitte wählen</option>
+        <option value="">Bitte waehlen</option>
         <option value="Kopf">Kopf</option>
         <option value="Brust">Brust</option>
         <option value="Bauch">Bauch</option>
-        <option value="Wirbelsäule">Wirbelsäule</option>
-        <option value="Extremität">Extremität</option>
+        <option value="Wirbelsaeule">Wirbelsaeule</option>
+        <option value="Extremitaet">Extremitaet</option>
     </select><br>
 
     <label>Kommentar</label><br>
     <textarea th:field="*{comment}"></textarea><br>
 
     <button type="submit">Reservierung speichern</button>
-
-
 </form>
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
+
 </body>
 </html>

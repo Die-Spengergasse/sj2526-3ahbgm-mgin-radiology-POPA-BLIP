@@ -7,22 +7,35 @@
 <h1>Reservierungsliste</h1>
 
 <table border="1" cellpadding="5">
+    <thead>
     <tr>
         <th>Patient</th>
+        <th>Gerät</th>
         <th>Datum</th>
-        <th>von</th>
-        <th>bis</th>
-        <th>Koerperregion</th>
+        <th>Von</th>
+        <th>Bis</th>
+        <th>Körperregion</th>
         <th>Kommentar</th>
     </tr>
+    </thead>
+    <tbody>
     <tr th:each="r : ${reservations}">
-        <td th:text="${r.patient.firstName + ' ' + r.patient.lastName}"></td>
+        <!-- Null-sicherer Zugriff: Wenn patient null ist, wird 'Kein Patient' angezeigt -->
+        <td th:text="${r.patient != null} ? (${r.patient.firstName} + ' ' + ${r.patient.lastName}) : 'Kein Patient'"></td>
+
+        <!-- Null-sicherer Zugriff: Wenn device null ist, wird 'Kein Gerät' angezeigt -->
+        <td th:text="${r.device != null} ? ${r.device.name} : 'Kein Gerät'"></td>
+
         <td th:text="${r.date}"></td>
         <td th:text="${r.timeFrom}"></td>
         <td th:text="${r.timeTo}"></td>
         <td th:text="${r.bodyRegion}"></td>
-        <td th:text="${r.comment} ?: '-'" ></td>
+        <td th:text="${r.comment} ?: '-'"></td>
     </tr>
+    </tbody>
 </table>
+
+<br>
+<a href="/newReservation">Neue Reservierung anlegen</a>
 </body>
 </html>

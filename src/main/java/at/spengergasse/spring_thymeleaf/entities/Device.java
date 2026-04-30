@@ -1,32 +1,39 @@
 package at.spengergasse.spring_thymeleaf.entities;
+
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "device")        //wie db tabelle  heißt
-public class Device
-{
+@Table(name = "device")
+public class Device {
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
     private String type;
     private String location;
 
-    public Device(String type, String location)
-    {
+    public Device() {
+    }
+
+    public Device(Long id, String name, String type, String location) {
+        this.id = id;
+        this.name = name;
         this.type = type;
         this.location = location;
     }
 
-    public Device()
-    {
 
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
-
 }

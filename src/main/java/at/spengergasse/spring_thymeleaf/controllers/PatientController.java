@@ -16,7 +16,8 @@ import java.time.format.DateTimeFormatter;
 public class PatientController {
     private final PatientRepository patientRepository;
 
-    public PatientController(PatientRepository patientRepository) {
+    public PatientController(PatientRepository patientRepository)
+    {
         this.patientRepository = patientRepository;
     }
 

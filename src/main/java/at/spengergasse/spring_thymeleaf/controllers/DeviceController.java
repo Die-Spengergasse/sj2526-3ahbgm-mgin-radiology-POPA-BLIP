@@ -11,23 +11,27 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-public class DeviceController {
-
+public class DeviceController
+{
     private final PatientRepository patientRepository;
     private final DeviceRepository deviceRepository;
     private final ReservationRepository reservationRepository;
 
-    public DeviceController(
-            PatientRepository patientRepository,
-            DeviceRepository deviceRepository,
-            ReservationRepository reservationRepository) {
+    public DeviceController(PatientRepository patientRepository, DeviceRepository deviceRepository, ReservationRepository reservationRepository)
+    {
         this.patientRepository = patientRepository;
         this.deviceRepository = deviceRepository;
         this.reservationRepository = reservationRepository;
     }
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/newPatient";
+    }
+
     @GetMapping("/newPatient")
-    public String newPatient(Model model) {
+    public String newPatient(Model model)
+    {
         model.addAttribute("patient", new Patient());
         return "newPatient";
     }
@@ -36,21 +40,18 @@ public class DeviceController {
     public String savePatient(@ModelAttribute Patient patient, Model model) {
         LocalDate birthDate = patient.getBirthDate();
         String socialSecurityNumber = patient.getSocialSecurityNumber();
-
         if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
             model.addAttribute("errorMessage", "Geburtsdatum darf nicht in der Zukunft liegen.");
             model.addAttribute("patient", patient);
             return "newPatient";
         }
 
-        if (socialSecurityNumber == null || socialSecurityNumber.trim().isEmpty())
-        {
+        if (socialSecurityNumber == null || socialSecurityNumber.trim().isEmpty()) {
             model.addAttribute("errorMessage", "Sozialversicherungsnummer ist erforderlich.");
             model.addAttribute("patient", patient);
             return "newPatient";
         }
-        if (socialSecurityNumber.length() < 10 || socialSecurityNumber.length() > 12)
-        {
+        if (socialSecurityNumber.length() < 10 || socialSecurityNumber.length() > 12) {
             model.addAttribute("errorMessage", "Ungültige Sozialversicherungsnummer (10–12 Zeichen).");
             model.addAttribute("patient", patient);
             return "newPatient";
@@ -69,26 +70,22 @@ public class DeviceController {
     }
 
     @PostMapping("/newReservation")
-    public String saveReservation(@ModelAttribute Reservation reservation, Model model)
-    {
+    public String saveReservation(@ModelAttribute Reservation reservation, Model model) {
         LocalDate date = reservation.getDate();
         String timeFrom = reservation.getTimeFrom();
-        String timeTo   = reservation.getTimeTo();
+        String timeTo   = reservation.getTimeFrom();
         Patient patient = reservation.getPatient();
         Device  device  = reservation.getDevice();
 
-        if (date != null && date.isBefore(LocalDate.now()))
-        {
+        if (date != null && date.isBefore(LocalDate.now())) {
             model.addAttribute("errorMessage", "Reservierung darf nicht für einen vergangenen Zeitpunkt erfolgen.");
             return prepareNewReservation(model, reservation);
         }
-
         if (device != null)
         {
-            String deviceId = device.getId();
-            List<Reservation> existingDevice = reservationRepository.findByDeviceIdAndDate(deviceId, date);
-            if (overlapsTime(existingDevice, timeFrom, timeTo))
-            {
+            Long deviceId = device.getId();
+            List<Reservation> existingDevice = reservationRepository.findByDeviceIdAndDate(deviceId , date);
+            if (overlapsTime(existingDevice, timeFrom, timeTo)) {
                 model.addAttribute("errorMessage", "Das Gerät ist in diesem Zeitraum bereits reserviert.");
                 return prepareNewReservation(model, reservation);
             }
@@ -96,10 +93,9 @@ public class DeviceController {
 
         if (patient != null)
         {
-            Integer patientId = patient.getid();
+            Long patientId = patient.getId();
             List<Reservation> existingPatient = reservationRepository.findByPatientIdAndDate(patientId, date);
-            if (overlapsTime(existingPatient, timeFrom, timeTo))
-            {
+            if (overlapsTime(existingPatient, timeFrom, timeTo)) {
                 model.addAttribute("errorMessage", "Der Patient hat in diesem Zeitraum bereits einen Termin.");
                 return prepareNewReservation(model, reservation);
             }
@@ -108,22 +104,18 @@ public class DeviceController {
         return "redirect:/deviceReservations";
     }
 
-    private String prepareNewReservation(Model model, Reservation reservation)
-    {
+    private String prepareNewReservation(Model model, Reservation reservation) {
         model.addAttribute("patients", patientRepository.findAll());
         model.addAttribute("devices", deviceRepository.findAll());
         model.addAttribute("reservation", reservation);
         return "newReservation";
     }
 
-    private boolean overlapsTime(List<Reservation> existing, String timeFrom, String timeTo)
-    {
-        for (Reservation r : existing)
-        {
+    private boolean overlapsTime(List<Reservation> existing, String timeFrom, String timeTo) {
+        for (Reservation r : existing) {
             String existingFrom = r.getTimeFrom();
             String existingTo   = r.getTimeTo();
-            if (timeFrom.compareTo(existingTo) < 0 && timeTo.compareTo(existingFrom) > 0)
-            {
+            if (timeFrom.compareTo(existingTo) < 0 && timeTo.compareTo(existingFrom) > 0) {
                 return true;
             }
         }
@@ -132,7 +124,8 @@ public class DeviceController {
 
     @GetMapping("/deviceReservations")
     public String deviceReservations(Model model) {
-        model.addAttribute("reservations", reservationRepository.findAll());
+        List<Reservation> reservations = reservationRepository.findAll();
+        model.addAttribute("reservations", reservations);
         return "deviceReservations";
     }
 }
