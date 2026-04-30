@@ -43,12 +43,14 @@ public class DeviceController {
             return "newPatient";
         }
 
-        if (socialSecurityNumber == null || socialSecurityNumber.trim().isEmpty()) {
+        if (socialSecurityNumber == null || socialSecurityNumber.trim().isEmpty())
+        {
             model.addAttribute("errorMessage", "Sozialversicherungsnummer ist erforderlich.");
             model.addAttribute("patient", patient);
             return "newPatient";
         }
-        if (socialSecurityNumber.length() < 10 || socialSecurityNumber.length() > 12) {
+        if (socialSecurityNumber.length() < 10 || socialSecurityNumber.length() > 12)
+        {
             model.addAttribute("errorMessage", "Ungültige Sozialversicherungsnummer (10–12 Zeichen).");
             model.addAttribute("patient", patient);
             return "newPatient";
@@ -114,9 +116,20 @@ public class DeviceController {
         return "newReservation";
     }
 
-    private boolean overlapsTime(List<Reservation> existing, String timeFrom, String timeTo) {
-        return existing.stream().anyMatch(r -> r.getTimeFrom() != null && r.getTimeTo() != null && timeFrom != null && timeTo != null && timeFrom.compareTo(r.getTimeTo()) < 0 && r.getTimeFrom().compareTo(timeTo) < 0);
+    private boolean overlapsTime(List<Reservation> existing, String timeFrom, String timeTo)
+    {
+        for (Reservation r : existing)
+        {
+            String existingFrom = r.getTimeFrom();
+            String existingTo   = r.getTimeTo();
+            if (timeFrom.compareTo(existingTo) < 0 && timeTo.compareTo(existingFrom) > 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
+
     @GetMapping("/deviceReservations")
     public String deviceReservations(Model model) {
         model.addAttribute("reservations", reservationRepository.findAll());
