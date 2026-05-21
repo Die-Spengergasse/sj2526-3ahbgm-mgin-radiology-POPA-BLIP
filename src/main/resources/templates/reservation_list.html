@@ -20,10 +20,10 @@
     </thead>
     <tbody>
     <tr th:each="r : ${reservations}">
-        <!-- Null-sicherer Zugriff: Wenn patient null ist, wird 'Kein Patient' angezeigt -->
+
         <td th:text="${r.patient != null} ? (${r.patient.firstName} + ' ' + ${r.patient.lastName}) : 'Kein Patient'"></td>
 
-        <!-- Null-sicherer Zugriff: Wenn device null ist, wird 'Kein Gerät' angezeigt -->
+
         <td th:text="${r.device != null} ? ${r.device.name} : 'Kein Gerät'"></td>
 
         <td th:text="${r.date}"></td>

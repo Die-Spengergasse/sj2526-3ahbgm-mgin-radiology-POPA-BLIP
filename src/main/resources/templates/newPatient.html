@@ -6,25 +6,27 @@
 <body>
 <h1>Neuen Patienten registrieren</h1>
 
-<form th:action="@{/newPatient}" th:object="${patient}" method="post">
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
+
+<form th:action="@{/patient/new}" th:object="${patient}" method="post">
     <label>Sozialversicherungsnummer</label><br>
-    <input type="text" th:field="*{socialSecurityNumber}" required /><br>
+    <input type="text" th:field="*{socialSecurityNumber}" /><br>
 
     <label>Vorname</label><br>
-    <input type="text" th:field="*{firstName}" required /><br>
+    <input type="text" th:field="*{firstName}" /><br>
 
     <label>Nachname</label><br>
-    <input type="text" th:field="*{lastName}" required /><br>
+    <input type="text" th:field="*{lastName}" /><br>
 
     <label>Geschlecht</label><br>
-    <select th:field="*{gender}" required>
+    <select th:field="*{gender}">
         <option value="Männlich">Männlich</option>
         <option value="Weiblich">Weiblich</option>
         <option value="Divers">Divers</option>
     </select><br>
 
     <label>Geburtsdatum</label><br>
-    <input type="date" th:field="*{birthDate}" required /><br>
+    <input type="date" th:field="*{birthDate}" /><br>
 
     <button type="submit">Patient speichern</button>
 </form>

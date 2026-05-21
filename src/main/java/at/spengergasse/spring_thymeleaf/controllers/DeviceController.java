@@ -24,108 +24,33 @@ public class DeviceController
         this.reservationRepository = reservationRepository;
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/newPatient";
+    @GetMapping("/device/new")
+    public String newDevice(Model model)
+    {        model.addAttribute("device", new Device());
+        return "newDevice";
     }
 
-    @GetMapping("/newPatient")
-    public String newPatient(Model model)
+    @PostMapping("/device/new")
+    public String saveDevice(@ModelAttribute Device device, Model model)
     {
-        model.addAttribute("patient", new Patient());
-        return "newPatient";
+        if (device.getName() == null || device.getName().trim().isEmpty()) {
+            model.addAttribute("errorMessage", "Gerätename ist erforderlich.");
+            model.addAttribute("device", device);
+            return "newDevice";
+        }
+        if (device.getType() == null || device.getType().trim().isEmpty()) {
+            model.addAttribute("errorMessage", "Gerätetyp ist erforderlich.");
+            model.addAttribute("device", device);
+            return "newDevice";
+        }
+        deviceRepository.save(device);
+        return "redirect:/reservation/new";
     }
 
-    @PostMapping("/newPatient")
-    public String savePatient(@ModelAttribute Patient patient, Model model) {
-        LocalDate birthDate = patient.getBirthDate();
-        String socialSecurityNumber = patient.getSocialSecurityNumber();
-        if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
-            model.addAttribute("errorMessage", "Geburtsdatum darf nicht in der Zukunft liegen.");
-            model.addAttribute("patient", patient);
-            return "newPatient";
-        }
 
-        if (socialSecurityNumber == null || socialSecurityNumber.trim().isEmpty()) {
-            model.addAttribute("errorMessage", "Sozialversicherungsnummer ist erforderlich.");
-            model.addAttribute("patient", patient);
-            return "newPatient";
-        }
-        if (socialSecurityNumber.length() < 10 || socialSecurityNumber.length() > 12) {
-            model.addAttribute("errorMessage", "Ungültige Sozialversicherungsnummer (10–12 Zeichen).");
-            model.addAttribute("patient", patient);
-            return "newPatient";
-        }
 
-        patientRepository.save(patient);
-        return "redirect:/newReservation";
-    }
-
-    @GetMapping("/newReservation")
-    public String newReservation(Model model) {
-        model.addAttribute("patients", patientRepository.findAll());
-        model.addAttribute("devices", deviceRepository.findAll());
-        model.addAttribute("reservation", new Reservation());
-        return "newReservation";
-    }
-
-    @PostMapping("/newReservation")
-    public String saveReservation(@ModelAttribute Reservation reservation, Model model) {
-        LocalDate date = reservation.getDate();
-        String timeFrom = reservation.getTimeFrom();
-        String timeTo   = reservation.getTimeFrom();
-        Patient patient = reservation.getPatient();
-        Device  device  = reservation.getDevice();
-
-        if (date != null && date.isBefore(LocalDate.now())) {
-            model.addAttribute("errorMessage", "Reservierung darf nicht für einen vergangenen Zeitpunkt erfolgen.");
-            return prepareNewReservation(model, reservation);
-        }
-        if (device != null)
-        {
-            Long deviceId = device.getId();
-            List<Reservation> existingDevice = reservationRepository.findByDeviceIdAndDate(deviceId , date);
-            if (overlapsTime(existingDevice, timeFrom, timeTo)) {
-                model.addAttribute("errorMessage", "Das Gerät ist in diesem Zeitraum bereits reserviert.");
-                return prepareNewReservation(model, reservation);
-            }
-        }
-
-        if (patient != null)
-        {
-            Long patientId = patient.getId();
-            List<Reservation> existingPatient = reservationRepository.findByPatientIdAndDate(patientId, date);
-            if (overlapsTime(existingPatient, timeFrom, timeTo)) {
-                model.addAttribute("errorMessage", "Der Patient hat in diesem Zeitraum bereits einen Termin.");
-                return prepareNewReservation(model, reservation);
-            }
-        }
-        reservationRepository.save(reservation);
-        return "redirect:/deviceReservations";
-    }
-
-    private String prepareNewReservation(Model model, Reservation reservation) {
-        model.addAttribute("patients", patientRepository.findAll());
-        model.addAttribute("devices", deviceRepository.findAll());
-        model.addAttribute("reservation", reservation);
-        return "newReservation";
-    }
-
-    private boolean overlapsTime(List<Reservation> existing, String timeFrom, String timeTo) {
-        for (Reservation r : existing) {
-            String existingFrom = r.getTimeFrom();
-            String existingTo   = r.getTimeTo();
-            if (timeFrom.compareTo(existingTo) < 0 && timeTo.compareTo(existingFrom) > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @GetMapping("/deviceReservations")
-    public String deviceReservations(Model model) {
-        List<Reservation> reservations = reservationRepository.findAll();
-        model.addAttribute("reservations", reservations);
-        return "deviceReservations";
-    }
 }
+
+
+
+
